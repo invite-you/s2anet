@@ -21,7 +21,7 @@ model = dict(
         num_outs=5),
     rbox_head=dict(
         type='S2ANetHead',
-        num_classes=16,
+        num_classes=15,
         in_channels=256,
         feat_channels=256,
         stacked_convs=2,
@@ -75,11 +75,11 @@ train_cfg = dict(
         pos_weight=-1,
         debug=False))
 test_cfg = dict(
-    nms_pre=2000,
+    nms_pre=3000,
     min_bbox_size=0,
     score_thr=0.05,
     nms=dict(type='nms_rotated', iou_thr=0.1),
-    max_per_img=2000)
+    max_per_img=3000)
 # dataset settings
 dataset_type = 'CocoDotaOBBDataset'
 data_root = '/content/gdrive/My Drive/Arirang/data/train/coco_add/'
@@ -154,7 +154,7 @@ lr_config = dict(
     warmup='linear',
     warmup_iters=500,
     warmup_ratio=1.0 / 3,
-    step=[8, 11])
+    step=[110])
 checkpoint_config = dict(interval=5)
 # yapf:disable
 log_config = dict(
@@ -165,7 +165,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 60
+total_epochs = 6000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '/content/gdrive/My Drive/Arirang/models/s2anet_r101_fpn_1x_ms_rotate/'
