@@ -12,10 +12,12 @@ from .xml_style import XMLDataset
 from .dota_obb import DotaOBBDataset
 from .hrsc2016 import HRSC2016Dataset
 
+from .coco_dota_oob import CocoDotaOBBDataset
+
 __all__ = [
     'CustomDataset', 'XMLDataset', 'CocoDataset', 'VOCDataset',
     'CityscapesDataset', 'GroupSampler', 'DistributedGroupSampler',
     'build_dataloader', 'ConcatDataset', 'RepeatDataset', 'ClassBalancedDataset',
-    'WIDERFaceDataset', 'DATASETS', 'build_dataset', 'DotaOBBDataset',
+    'WIDERFaceDataset', 'DATASETS', 'build_dataset', 'DotaOBBDataset', 'CocoDotaOBBDataset',
     
 ]

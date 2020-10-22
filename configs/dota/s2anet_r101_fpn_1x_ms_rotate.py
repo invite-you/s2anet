@@ -81,8 +81,8 @@ test_cfg = dict(
     nms=dict(type='nms_rotated', iou_thr=0.1),
     max_per_img=2000)
 # dataset settings
-dataset_type = 'DotaOBBDataset'
-data_root = '/workfs/jmhan/dota_1024_ms/'
+dataset_type = 'CocoDotaOBBDataset'
+data_root = '/content/gdrive/My Drive/Arirang/data/train/coco_add/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -90,11 +90,27 @@ train_pipeline = [
     dict(type='LoadAnnotations', with_bbox=True),
     dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
     dict(type='RotatedRandomFlip', flip_ratio=0.5),
-    dict(type='RandomRotate', rate=0.5, angles=[30, 60, 90, 120, 150], auto_bound=False),
+    dict(type='RandomRotate', rate=0.5, angles=[15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 235, 250, 265, 280, 295, 310, 325, 340], auto_bound=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
+]
+val_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(1024, 1024),
+        flip=False,
+        transforms=[
+            dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
+            dict(type='RotatedRandomFlip'),
+            dict(type='RandomRotate', rate=0.5, angles=[15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 235, 250, 265, 280, 295, 310, 325, 340], auto_bound=False),
+            dict(type='Normalize', **img_norm_cfg),
+            dict(type='Pad', size_divisor=32),
+            dict(type='ImageToTensor', keys=['img']),
+            dict(type='Collect', keys=['img']),
+        ])
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -112,22 +128,22 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    imgs_per_gpu=2,
+    imgs_per_gpu=6,
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
-        ann_file=data_root + 'trainval_split/trainval.json',
-        img_prefix=data_root + 'trainval_split/images/',
+         ann_file=data_root + 'annotations/instances_train2017.json',
+        img_prefix=data_root + 'train2017/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'trainval_split/trainval.json',
-        img_prefix=data_root + 'trainval_split/images/',
-        pipeline=test_pipeline),
+        ann_file=data_root + 'annotations/instances_val2017.json',
+        img_prefix=data_root + 'val2017/',
+        pipeline=val_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'test_split/test.json',
-        img_prefix=data_root + 'test_split/images/',
+        ann_file= '/content/gdrive/My Drive/Arirang/data/test/instances_test2017.json',
+        img_prefix= '/content/gdrive/My Drive/Arirang/data/test/images/',
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
@@ -139,22 +155,22 @@ lr_config = dict(
     warmup_iters=500,
     warmup_ratio=1.0 / 3,
     step=[8, 11])
-checkpoint_config = dict(interval=12)
+checkpoint_config = dict(interval=5)
 # yapf:disable
 log_config = dict(
     interval=50,
     hooks=[
         dict(type='TextLoggerHook'),
-        # dict(type='TensorboardLoggerHook')
+        dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 12
+total_epochs = 60
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = 'work_dirs/s2anet_r101_fpn_1x_ms_rotate/'
-load_from = None
-resume_from = None
+work_dir = '/content/gdrive/My Drive/Arirang/models/s2anet_r101_fpn_1x_ms_rotate/'
+load_from = '/content/gdrive/My Drive/Arirang/s2anet_r101_fpn_1x_ms_rotate_epoch_12_20200815.pth'
+resume_from = None#'/content/gdrive/My Drive/Arirang/models/s2anet_r101_fpn_1x_ms_rotate/latest.pth'
 workflow = [('train', 1)]
 # map: 0.7855522231753681
 # classaps:  [89.30355435 83.17899272 55.46235167 80.79237566 79.64023801 83.80199387

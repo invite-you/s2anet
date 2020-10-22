@@ -9,6 +9,11 @@ from mmdet.core import poly2rbox, rbox2poly, rbox_flip
 from ..registry import PIPELINES
 
 
+import matplotlib.pyplot as plt
+import cv2
+from PIL import Image, ImageDraw
+
+
 @PIPELINES.register_module
 class RotatedRandomFlip(object):
     """Flip the image & bbox & mask.
@@ -57,6 +62,7 @@ class RotatedRandomFlip(object):
         return rboxes
 
     def __call__(self, results):
+        """
         if 'flip' not in results:
             flip = True if np.random.rand() < self.flip_ratio else False
             results['flip'] = flip
@@ -74,6 +80,8 @@ class RotatedRandomFlip(object):
             # flip masks
             for key in results.get('mask_fields', []):
                 results[key] = [mask[:, ::-1] for mask in results[key]]
+        """
+        results['flip'] = False
 
         return results
 
@@ -132,6 +140,7 @@ class RotatedResize(object):
         self.multiscale_mode = multiscale_mode
         self.ratio_range = ratio_range
         self.keep_ratio = keep_ratio
+        self.count = 0
 
     @staticmethod
     def random_select(img_scales):
@@ -228,11 +237,13 @@ class RotatedResize(object):
             results[key] = masks
 
     def __call__(self, results):
+
         if 'scale' not in results:
             self._random_scale(results)
         self._resize_img(results)
-        self._resize_rboxes(results)
+        #self._resize_rboxes(results)
         self._resize_masks(results)
+
         return results
 
     def __repr__(self):

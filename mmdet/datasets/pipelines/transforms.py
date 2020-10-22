@@ -11,6 +11,11 @@ from mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
 from ..registry import PIPELINES
 
 
+import matplotlib.pyplot as plt
+import cv2
+from PIL import Image, ImageDraw
+
+
 @PIPELINES.register_module
 class Resize(object):
     """Resize images & bbox & mask.
@@ -288,8 +293,28 @@ class Normalize(object):
         self.mean = np.array(mean, dtype=np.float32)
         self.std = np.array(std, dtype=np.float32)
         self.to_rgb = to_rgb
+        self.count = 0
 
     def __call__(self, results):
+
+        """
+        img = Image.fromarray(results['img'].astype('uint8'), 'RGB')
+        #img = Image.new('L', (1024, 1024), 0)
+        for bx in results['gt_bboxes']:
+            bx = ((bx[0], bx[1]), (bx[2], bx[3]), bx[4])
+            #print(bx)
+            box = cv2.boxPoints(bx)
+            #print(box)
+            ImageDraw.Draw(img).polygon(box, outline=255)
+        print('/content/gdrive/My Drive/Arirang/data/image_test/' + results['img_info']['file_name'])        
+        img.save('/content/gdrive/My Drive/Arirang/data/image_test/' + results['img_info']['file_name'])
+        self.count += 1
+        if self.count > 6:
+            print(data['img'])
+
+        print(aa.sef)
+        """
+
         results['img'] = mmcv.imnormalize(results['img'], self.mean, self.std,
                                           self.to_rgb)
         results['img_norm_cfg'] = dict(
