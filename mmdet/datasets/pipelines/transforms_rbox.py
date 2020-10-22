@@ -30,6 +30,8 @@ class RotatedRandomFlip(object):
         self.flip_ratio = flip_ratio
         if flip_ratio is not None:
             assert flip_ratio >= 0 and flip_ratio <= 1
+        self.seq = iaa.Sequential([iaa.Fliplr(1.0)])
+
 
     def bbox_flip(self, bboxes, img_shape):
         """Flip bboxes horizontally.
@@ -62,11 +64,12 @@ class RotatedRandomFlip(object):
         return rboxes
 
     def __call__(self, results):
-        """
+        
         if 'flip' not in results:
             flip = True if np.random.rand() < self.flip_ratio else False
             results['flip'] = flip
         if results['flip']:
+            """
             # flip image
             results['img'] = mmcv.imflip(results['img'])
             # flip bboxes
@@ -80,8 +83,27 @@ class RotatedRandomFlip(object):
             # flip masks
             for key in results.get('mask_fields', []):
                 results[key] = [mask[:, ::-1] for mask in results[key]]
-        """
-        results['flip'] = False
+            """
+            polys = []            
+            for bx in results['gt_bboxes']:            
+                bx = ((bx[0], bx[1]), (bx[2], bx[3]), bx[4])
+                # rbox를 polygon으로 변환
+                poly = cv2.boxPoints(bx)                        
+                polys.append( ia.Polygon(poly) )
+
+            image_aug, poly_aug = self.seq(images= [results['img']], polygons= [polys])
+            image_aug, poly_aug = image_aug[0], poly_aug[0]
+            
+            rboxs =[]
+            for poly in poly_aug:
+                # polygon을 rbox로 변환
+                rc = cv2.minAreaRect(poly.coords)
+                rboxs.append( [rc[0][0], rc[0][1], rc[1][0], rc[1][1], rc[2]] )
+            rboxs = np.array(rboxs)
+            
+            results['img'] = image_aug
+            results['gt_bboxes'] = rboxs
+
 
         return results
 
