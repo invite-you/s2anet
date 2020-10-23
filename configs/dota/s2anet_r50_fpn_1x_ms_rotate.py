@@ -80,7 +80,7 @@ test_cfg = dict(
     nms=dict(type='nms_rotated', iou_thr=0.1),
     max_per_img=3000)
 dataset_type = 'CocoDotaOBBDataset'
-data_root = '/content/gdrive/My Drive/Arirang/data/train/coco_add/'
+data_root = '/content/gdrive/My Drive/Arirang/data/train/coco_all/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -88,6 +88,7 @@ train_pipeline = [
     dict(type='LoadAnnotations', with_bbox=True),
     dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
     dict(type='RotatedRandomFlip', flip_ratio=0.5),
+    dict(type='RotatedRandomBrightness', flip_ratio=0.5),  
     dict(type='RandomRotate', rate=0.5, angles=[15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 235, 250, 265, 280, 295, 310, 325, 340], auto_bound=False),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
@@ -103,6 +104,7 @@ val_pipeline = [
         transforms=[
             dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
             dict(type='RotatedRandomFlip'),
+            dict(type='RotatedRandomBrightness', flip_ratio=0.5),  
             dict(type='RandomRotate', rate=0.5, angles=[15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 235, 250, 265, 280, 295, 310, 325, 340], auto_bound=False),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -118,7 +120,6 @@ test_pipeline = [
         flip=False,
         transforms=[
             dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
-            dict(type='RotatedRandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),

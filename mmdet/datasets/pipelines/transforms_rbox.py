@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import cv2
 from PIL import Image, ImageDraw
 
+import imgaug as ia
+import imgaug.augmenters as iaa
 
 @PIPELINES.register_module
 class RotatedRandomFlip(object):
@@ -109,6 +111,38 @@ class RotatedRandomFlip(object):
 
     def __repr__(self):
         return self.__class__.__name__ + '(flip_ratio={})'.format(
+            self.flip_ratio)
+
+
+class RotatedRandomBrightness(object):
+    """Flip the image & bbox & mask.
+
+    If the input dict contains the key "flip", then the flag will be used,
+    otherwise it will be randomly decided by a ratio specified in the init
+    method.
+
+    Args:
+        flip_ratio (float, optional): The flipping probability.
+    """
+
+    def __init__(self, Brightness_ratio=None):
+        self.Brightness_ratio = Brightness_ratio
+        self.seq = iaa.Sequential([iaa.MultiplyBrightness((0.3, 1.3))])
+
+    def __call__(self, results):
+        
+        if 'flip' not in results:
+            Brightness = True if np.random.rand() < self.Brightness_ratio else False            
+        if Brightness:
+            image_aug = self.seq(images= [results['img']])
+            image_aug = image_aug[0]
+
+            results['img'] = image_aug
+            
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(Brightness_ratio={})'.format(
             self.flip_ratio)
 
 

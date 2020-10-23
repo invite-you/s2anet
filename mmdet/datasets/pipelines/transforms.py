@@ -296,7 +296,6 @@ class Normalize(object):
         self.count = 0
 
     def __call__(self, results):
-
         """
         img = Image.fromarray(results['img'].astype('uint8'), 'RGB')
         #img = Image.new('L', (1024, 1024), 0)

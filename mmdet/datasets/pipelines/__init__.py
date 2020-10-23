@@ -8,7 +8,7 @@ from .transforms import (Albu, Expand, MinIoURandomCrop, Normalize, Pad,
                          PhotoMetricDistortion, RandomCrop, RandomFlip, Resize,
                          SegResizeFlipPadRescale)
 from .transforms_rbox import (MinSizeNorm, PesudoRotatedRandomFlip,
-                              PesudoRotatedResize, RotatedRandomFlip,
+                              PesudoRotatedResize, RotatedRandomFlip, RotatedRandomBrightness,
                               RotatedResize)
 from .random_rotate import RandomRotate
 
@@ -17,6 +17,6 @@ __all__ = [
     'Transpose', 'Collect', 'LoadAnnotations', 'LoadImageFromFile',
     'LoadProposals', 'MultiScaleFlipAug', 'Resize', 'RandomFlip', 'Pad',
     'RandomCrop', 'Normalize', 'SegResizeFlipPadRescale', 'MinIoURandomCrop',
-    'Expand', 'PhotoMetricDistortion', 'Albu', 'RotatedRandomFlip',
+    'Expand', 'PhotoMetricDistortion', 'Albu', 'RotatedRandomFlip', 'RotatedRandomBrightness',
     'RotatedResize', 'RandomRotate'
 ]
