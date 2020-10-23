@@ -297,6 +297,7 @@ class Normalize(object):
 
     def __call__(self, results):
         """
+        for Debugging
         img = Image.fromarray(results['img'].astype('uint8'), 'RGB')
         #img = Image.new('L', (1024, 1024), 0)
         for bx in results['gt_bboxes']:
@@ -308,16 +309,16 @@ class Normalize(object):
         print('/content/gdrive/My Drive/Arirang/data/image_test/' + results['img_info']['file_name'])        
         img.save('/content/gdrive/My Drive/Arirang/data/image_test/' + results['img_info']['file_name'])
         self.count += 1
-        if self.count > 6:
+        if self.count > 10:
             print(data['img'])
-
-        print(aa.sef)
         """
-
         results['img'] = mmcv.imnormalize(results['img'], self.mean, self.std,
                                           self.to_rgb)
         results['img_norm_cfg'] = dict(
             mean=self.mean, std=self.std, to_rgb=self.to_rgb)
+
+
+
         return results
 
     def __repr__(self):

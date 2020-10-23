@@ -106,33 +106,22 @@ class RotatedRandomFlip(object):
             results['img'] = image_aug
             results['gt_bboxes'] = rboxs
 
-
         return results
 
     def __repr__(self):
         return self.__class__.__name__ + '(flip_ratio={})'.format(
             self.flip_ratio)
 
-
+@PIPELINES.register_module
 class RotatedRandomBrightness(object):
-    """Flip the image & bbox & mask.
-
-    If the input dict contains the key "flip", then the flag will be used,
-    otherwise it will be randomly decided by a ratio specified in the init
-    method.
-
-    Args:
-        flip_ratio (float, optional): The flipping probability.
-    """
-
     def __init__(self, Brightness_ratio=None):
         self.Brightness_ratio = Brightness_ratio
-        self.seq = iaa.Sequential([iaa.MultiplyBrightness((0.3, 1.3))])
+        self.seq = iaa.Sequential([iaa.MultiplyBrightness((0.3, 1.3))
+                                    ])
 
     def __call__(self, results):
         
-        if 'flip' not in results:
-            Brightness = True if np.random.rand() < self.Brightness_ratio else False            
+        Brightness = True if np.random.rand() < self.Brightness_ratio else False            
         if Brightness:
             image_aug = self.seq(images= [results['img']])
             image_aug = image_aug[0]
@@ -143,6 +132,67 @@ class RotatedRandomBrightness(object):
 
     def __repr__(self):
         return self.__class__.__name__ + '(Brightness_ratio={})'.format(
+            self.flip_ratio)
+
+
+@PIPELINES.register_module
+class RotatedRandomColorTemperature(object):
+    def __init__(self, ColorTemperature=None):
+        self.ColorTemperature = ColorTemperature
+        self.seq = iaa.Sequential([iaa.ChangeColorTemperature((4300, 6000)),
+                                    ])
+
+    def __call__(self, results):
+        
+        ColorTemperature = True if np.random.rand() < self.ColorTemperature else False            
+        if ColorTemperature:
+            image_aug = self.seq(images= [results['img']])
+            image_aug = image_aug[0]
+
+            results['img'] = image_aug
+            
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(ColorTemperature={})'.format(
+            self.flip_ratio)
+
+
+@PIPELINES.register_module
+class RotatedRandomAffine(object):
+    def __init__(self, Affine_ratio=None):
+        self.Affine_ratio = Affine_ratio
+        self.seq = iaa.Sequential([iaa.Affine(rotate=(-180, 180), shear=(-6, 6))
+                                    ])
+
+    def __call__(self, results):
+        
+        Affine = True if np.random.rand() < self.Affine_ratio else False            
+        if Affine:
+            polys = []            
+            for bx in results['gt_bboxes']:            
+                bx = ((bx[0], bx[1]), (bx[2], bx[3]), bx[4])
+                # rbox를 polygon으로 변환
+                poly = cv2.boxPoints(bx)                        
+                polys.append( ia.Polygon(poly) )
+
+            image_aug, poly_aug = self.seq(images= [results['img']], polygons= [polys])
+            image_aug, poly_aug = image_aug[0], poly_aug[0]
+            
+            rboxs =[]
+            for poly in poly_aug:
+                # polygon을 rbox로 변환
+                rc = cv2.minAreaRect(poly.coords)
+                rboxs.append( [rc[0][0], rc[0][1], rc[1][0], rc[1][1], rc[2]] )
+            rboxs = np.array(rboxs)
+            
+            results['img'] = image_aug
+            results['gt_bboxes'] = rboxs
+                        
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(Affine_ratio={})'.format(
             self.flip_ratio)
 
 

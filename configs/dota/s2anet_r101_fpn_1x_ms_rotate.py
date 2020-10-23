@@ -90,8 +90,9 @@ train_pipeline = [
     dict(type='LoadAnnotations', with_bbox=True),
     dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
     dict(type='RotatedRandomFlip', flip_ratio=0.5),
-    dict(type='RotatedRandomBrightness', flip_ratio=0.5),    
-    dict(type='RandomRotate', rate=0.5, angles=[15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 235, 250, 265, 280, 295, 310, 325, 340], auto_bound=False),
+    dict(type='RotatedRandomBrightness', Brightness_ratio=0.5),   
+    dict(type='RotatedRandomColorTemperature', ColorTemperature=0.2), 
+    dict(type='RotatedRandomAffine', Affine_ratio=0.95), 
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
@@ -106,8 +107,9 @@ val_pipeline = [
         transforms=[
             dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
             dict(type='RotatedRandomFlip'),
-            dict(type='RotatedRandomBrightness', flip_ratio=0.5),
-            dict(type='RandomRotate', rate=0.5, angles=[15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 235, 250, 265, 280, 295, 310, 325, 340], auto_bound=False),
+            dict(type='RotatedRandomBrightness', Brightness_ratio=0.5),
+            dict(type='RotatedRandomColorTemperature', ColorTemperature=0.1),
+            dict(type='RotatedRandomAffine', Affine_ratio=1.0), 
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),
@@ -129,7 +131,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    imgs_per_gpu=6,
+    imgs_per_gpu=4,
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
