@@ -188,7 +188,7 @@ class RotatedRandomAffine(object):
             
             results['img'] = image_aug
             results['gt_bboxes'] = rboxs
-                        
+            results['rotate'] = False           
         return results
 
     def __repr__(self):

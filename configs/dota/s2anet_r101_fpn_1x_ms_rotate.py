@@ -84,7 +84,7 @@ test_cfg = dict(
 dataset_type = 'CocoDotaOBBDataset'
 data_root = '/content/gdrive/My Drive/Arirang/data/train/coco_all/'
 img_norm_cfg = dict(
-    mean=[56.7493, 55.9952, 53.9282], std=[171.6862, 167.8777, 161.0818], to_rgb=True)
+    mean=[54.06, 53.295, 50.235], std=[36.72, 35.955, 33.915], to_rgb=True)    
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -149,7 +149,7 @@ data = dict(
         img_prefix= '/content/gdrive/My Drive/Arirang/data/test/images/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.005, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
@@ -172,7 +172,7 @@ total_epochs = 6000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '/content/gdrive/My Drive/Arirang/models/s2anet_r101_fpn_1x_ms_rotate/'
-load_from = '/content/gdrive/My Drive/Arirang/s2anet_r101_fpn_1x_ms_rotate_epoch_12_20200815.pth'
+load_from = '/content/gdrive/My Drive/Arirang/models/s2anet_r101_fpn_1x_ms_rotate_bed/epoch_352.pth'#'/content/gdrive/My Drive/Arirang/models/s2anet_r101_fpn_1x_ms_rotate/latest.pth'#'/content/gdrive/My Drive/Arirang/s2anet_r101_fpn_1x_ms_rotate_epoch_12_20200815.pth'
 resume_from = None#'/content/gdrive/My Drive/Arirang/models/s2anet_r101_fpn_1x_ms_rotate/latest.pth'
 workflow = [('train', 1)]
 # map: 0.7855522231753681
