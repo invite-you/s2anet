@@ -90,7 +90,7 @@ train_pipeline = [
     dict(type='RotatedRandomFlip', flip_ratio=0.5),
     dict(type='RotatedRandomBrightness', Brightness_ratio=0.5),   
     dict(type='RotatedRandomColorTemperature', ColorTemperature=0.2), 
-    dict(type='RotatedRandomAffine', Affine_ratio=0.95), 
+    dict(type='RotatedRandomAffine', Affine_ratio=0.9), 
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),

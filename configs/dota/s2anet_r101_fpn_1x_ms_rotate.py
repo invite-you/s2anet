@@ -92,7 +92,7 @@ train_pipeline = [
     dict(type='RotatedRandomFlip', flip_ratio=0.5),
     dict(type='RotatedRandomBrightness', Brightness_ratio=0.5),   
     dict(type='RotatedRandomColorTemperature', ColorTemperature=0.2), 
-    dict(type='RotatedRandomAffine', Affine_ratio=0.95), 
+    dict(type='RotatedRandomAffine', Affine_ratio=0.9), 
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
@@ -108,7 +108,7 @@ val_pipeline = [
             dict(type='RotatedResize', img_scale=(1024, 1024), keep_ratio=True),
             dict(type='RotatedRandomFlip'),
             dict(type='RotatedRandomBrightness', Brightness_ratio=0.5),
-            dict(type='RotatedRandomColorTemperature', ColorTemperature=0.1),
+            dict(type='RotatedRandomColorTemperature', ColorTemperature=0.2),
             dict(type='RotatedRandomAffine', Affine_ratio=1.0), 
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -131,7 +131,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    imgs_per_gpu=4,
+    imgs_per_gpu=6,
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
