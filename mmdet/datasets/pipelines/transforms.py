@@ -297,7 +297,7 @@ class Normalize(object):
 
     def __call__(self, results):
         """
-        for Debugging
+        #for Debugging
         img = Image.fromarray(results['img'].astype('uint8'), 'RGB')
         #img = Image.new('L', (1024, 1024), 0)
         for bx in results['gt_bboxes']:

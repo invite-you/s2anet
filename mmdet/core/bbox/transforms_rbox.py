@@ -4,6 +4,7 @@ import math
 import mmcv
 import numpy as np
 import torch
+import cv2
 
 PI = np.pi
 
@@ -174,11 +175,12 @@ def rbox2result(bboxes, labels, num_classes):
         return [bboxes[labels == i, :] for i in range(num_classes - 1)]
 
 
-def rbox2poly_single(rrect):
+def rbox2poly_single(bx):
     """
     rrect:[x_ctr,y_ctr,w,h,angle]
     to
     poly:[x0,y0,x1,y1,x2,y2,x3,y3]
+    """
     """
     x_ctr, y_ctr, width, height, angle = rrect[:5]
     tl_x, tl_y, br_x, br_y = -width/2, -height/2, width/2, height/2
@@ -189,6 +191,12 @@ def rbox2poly_single(rrect):
     x0, x1, x2, x3 = poly[0, :4] + x_ctr
     y0, y1, y2, y3 = poly[1, :4] + y_ctr
     poly = np.array([x0, y0, x1, y1, x2, y2, x3, y3], dtype=np.float32)
+    """
+    rrect = ((bx[0], bx[1]), (bx[2], bx[3]), bx[4])
+    # rbox를 polygon으로 변환
+    poly = cv2.boxPoints(rrect)                        
+    poly = poly.reshape(1,8)[0]
+    
     poly = get_best_begin_point_single(poly)
     return poly
 
@@ -198,6 +206,7 @@ def rbox2poly(rrects):
     rrect:[x_ctr,y_ctr,w,h,angle]
     to
     poly:[x0,y0,x1,y1,x2,y2,x3,y3]
+    """
     """
     polys = []
     for rrect in rrects:
@@ -212,6 +221,18 @@ def rbox2poly(rrects):
         poly = np.array([x0, y0, x1, y1, x2, y2, x3, y3], dtype=np.float32)
         polys.append(poly)
     polys = np.array(polys)
+    polys = get_best_begin_point(polys)
+    """
+
+    polys = [] 
+    for bx in rrects:            
+        bx = ((bx[0], bx[1]), (bx[2], bx[3]), bx[4])
+        # rbox를 polygon으로 변환
+        poly = cv2.boxPoints(bx)                        
+        polys.append( poly.reshape(1,8)[0] ) 
+
+    polys = np.array(polys)
+    
     polys = get_best_begin_point(polys)
     return polys
 
@@ -248,6 +269,7 @@ def poly2rbox_single(poly):
     to
     rrect:[x_ctr,y_ctr,w,h,angle]
     """
+    """
     poly = np.array(poly[:8], dtype=np.float32)
 
     pt1 = (poly[0], poly[1])
@@ -281,13 +303,25 @@ def poly2rbox_single(poly):
     y_ctr = np.float(pt1[1] + pt3[1]) / 2
     rrect = np.array([x_ctr, y_ctr, width, height, angle])
     return rrect
-
+    """
+    # polygon을 rbox로 변환
+    rc = cv2.minAreaRect( np.array(poly.reshape(4,2), dtype=np.float32) )
+    return np.array( [rc[0][0], rc[0][1], rc[1][0], rc[1][1], rc[2]] )
 
 def poly2rbox(polys):
     """
     poly:[x0,y0,x1,y1,x2,y2,x3,y3]
     to
     rrect:[x_ctr,y_ctr,w,h,angle]
+    """
+    rboxs = []
+    for poly in polys:
+        # polygon을 rbox로 변환        
+        rc = cv2.minAreaRect( np.array(poly.reshape(4,2), dtype=np.float32) )
+        rboxs.append( [rc[0][0], rc[0][1], rc[1][0], rc[1][1], rc[2]] )
+    rboxs = np.array(rboxs)
+
+    return rboxs
     """
     rrects = []
     for poly in polys:
@@ -325,6 +359,7 @@ def poly2rbox(polys):
         rrect = np.array([x_ctr, y_ctr, width, height, angle])
         rrects.append(rrect)
     return np.array(rrects)
+    """
 
 
 def poly2rbox_torch(polys):
@@ -404,7 +439,7 @@ def cal_line_length(point1, point2):
     return math.sqrt(math.pow(point1[0] - point2[0], 2) + math.pow(point1[1] - point2[1], 2))
 
 
-def get_best_begin_point_single(coordinate):
+def get_best_begin_point_single(coordinate):    
     x1, y1, x2, y2, x3, y3, x4, y4 = coordinate
     xmin = min(x1, x2, x3, x4)
     ymin = min(y1, y2, y3, y4)

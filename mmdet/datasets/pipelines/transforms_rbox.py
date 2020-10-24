@@ -116,7 +116,7 @@ class RotatedRandomFlip(object):
 class RotatedRandomBrightness(object):
     def __init__(self, Brightness_ratio=None):
         self.Brightness_ratio = Brightness_ratio
-        self.seq = iaa.Sequential([iaa.MultiplyBrightness((0.3, 1.3))
+        self.seq = iaa.Sequential([iaa.MultiplyBrightness((0.95, 1.05))
                                     ])
 
     def __call__(self, results):

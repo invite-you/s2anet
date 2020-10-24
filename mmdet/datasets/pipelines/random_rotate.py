@@ -19,7 +19,7 @@ class RandomRotate(object):
         self.angles = angles
         # new image shape or not
         self.auto_bound = auto_bound
-
+        
     @property
     def rand_angle(self):
         return random.sample(self.angles, 1)[0]
@@ -43,6 +43,7 @@ class RandomRotate(object):
         if len(coords) == 0:
             return coords
         coords = np.asarray(coords, dtype=float)
+
         return cv2.transform(coords[:, np.newaxis, :], self.rm_coords)[:, 0, :]
 
     def apply_segmentation(self, segmentation):
@@ -55,8 +56,11 @@ class RandomRotate(object):
         if self.auto_bound:
             # Find the coordinates of the center of rotation in the new image
             # The only point for which we know the future coordinates is the center of the image
+            print(center)
+            print(center[None, None, :])
             rot_im_center = cv2.transform(
                 center[None, None, :] + offset, rm)[0, 0, :]
+            
             new_center = np.array(
                 [bound_w / 2, bound_h / 2]) + offset - rot_im_center
             # shift the rotation center to the new coordinates
@@ -114,4 +118,7 @@ class RandomRotate(object):
             return None
         results['gt_bboxes'] = gt_bboxes
         results['labels'] = labels
+
+        
+
         return results
