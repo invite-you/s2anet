@@ -136,6 +136,29 @@ class RotatedRandomBrightness(object):
 
 
 @PIPELINES.register_module
+class RotatedRandomAllChannelsCLAHE(object):
+    def __init__(self, AllChannelsCLAHE_ratio=None):
+        self.AllChannelsCLAHE_ratio = AllChannelsCLAHE_ratio
+        self.seq = iaa.Sequential([iaa.AllChannelsCLAHE(clip_limit=(0.8, 0.8)),
+                                    ])
+
+    def __call__(self, results):
+        
+        AllChannelsCLAHE = True #if np.random.rand() < self.AllChannelsCLAHE_ratio else False            
+        if AllChannelsCLAHE:
+            image_aug = self.seq(images= [results['img']])
+            image_aug = image_aug[0]
+
+            results['img'] = image_aug
+            
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(AllChannelsCLAHE_ratio={})'.format(
+            self.flip_ratio)
+
+
+@PIPELINES.register_module
 class RotatedRandomColorTemperature(object):
     def __init__(self, ColorTemperature=None):
         self.ColorTemperature = ColorTemperature
