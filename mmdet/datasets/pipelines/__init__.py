@@ -10,7 +10,7 @@ from .transforms import (Albu, Expand, MinIoURandomCrop, Normalize, Pad,
 from .transforms_rbox import (MinSizeNorm, PesudoRotatedRandomFlip,
                               PesudoRotatedResize, RotatedRandomFlip, RotatedRandomBrightness,
                               RotatedResize, RotatedRandomColorTemperature, RotatedRandomAffine,
-                              RotatedRandomAllChannelsCLAHE)
+                              RotatedRandomAllChannelsCLAHE, RotatedRandomGrayscale)
 from .random_rotate import RandomRotate
 
 __all__ = [
@@ -20,5 +20,5 @@ __all__ = [
     'RandomCrop', 'Normalize', 'SegResizeFlipPadRescale', 'MinIoURandomCrop',
     'Expand', 'PhotoMetricDistortion', 'Albu', 'RotatedRandomFlip', 'RotatedRandomBrightness',
     'RotatedResize', 'RandomRotate', 'RotatedRandomColorTemperature', 'RotatedRandomAffine',
-    'RotatedRandomAllChannelsCLAHE'
+    'RotatedRandomAllChannelsCLAHE', 'RotatedRandomGrayscale'
 ]

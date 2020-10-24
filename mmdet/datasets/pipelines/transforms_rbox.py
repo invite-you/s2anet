@@ -182,6 +182,29 @@ class RotatedRandomColorTemperature(object):
 
 
 @PIPELINES.register_module
+class RotatedRandomGrayscale(object):
+    def __init__(self, Grayscale_ratio=None):
+        self.Grayscale_ratio = Grayscale_ratio
+        self.seq = iaa.Sequential([iaa.Grayscale(alpha=(0.0, 0.5))
+                                    ])
+
+    def __call__(self, results):
+        
+        Grayscale = True if np.random.rand() < self.Grayscale_ratio else False            
+        if Grayscale:
+            image_aug = self.seq(images= [results['img']])
+            image_aug = image_aug[0]
+
+            results['img'] = image_aug
+            
+        return results
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(Grayscale_ratio={})'.format(
+            self.flip_ratio)
+
+
+@PIPELINES.register_module
 class RotatedRandomAffine(object):
     def __init__(self, Affine_ratio=None):
         self.Affine_ratio = Affine_ratio
