@@ -21,7 +21,7 @@ model = dict(
         num_outs=5),
     rbox_head=dict(
         type='S2ANetHead',
-        num_classes=6,
+        num_classes=5,
         in_channels=256,
         feat_channels=256,
         stacked_convs=2,
@@ -80,7 +80,7 @@ test_cfg = dict(
     nms=dict(type='nms_rotated', iou_thr=0.1),
     max_per_img=3000)
 dataset_type = 'CocoDotaOBBCARDataset'
-data_root = '/content/gdrive/My Drive/Arirang/data/train/custom_coco_all/'
+data_root = '/content/gdrive/My Drive/Arirang/data/train/custom_coco_all_car/'
 imgae_root = '/content/gdrive/My Drive/Arirang/data/train/coco_all/'
 img_norm_cfg = dict(
     mean=[54.06, 53.295, 50.235], std=[36.72, 35.955, 33.915], to_rgb=True)
@@ -149,7 +149,7 @@ data = dict(
         img_prefix= '/content/gdrive/My Drive/Arirang/data/test/images/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='Adam', lr=0.0005, weight_decay=0.0001)
+optimizer = dict(type='Adam', lr=0.005, weight_decay=0.0001)
 #dict(type='SGD', lr=0.005, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
@@ -173,8 +173,8 @@ total_epochs = 6000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_car_adam/'
-load_from = None#'/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_adam/epoch_304.pth'#'/content/gdrive/My Drive/Arirang/s2anet_r50_fpn_1x_ms_rotate_epoch_12_20200815.pth'
-resume_from ='/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_car_adam/latest.pth'
+load_from = '/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_car_adam_/latest.pth'#'/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_adam/epoch_304.pth'#'/content/gdrive/My Drive/Arirang/s2anet_r50_fpn_1x_ms_rotate_epoch_12_20200815.pth'
+resume_from = None#'/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_car_adam_/latest.pth'
 
 workflow = [('train', 1)]
 # r50
