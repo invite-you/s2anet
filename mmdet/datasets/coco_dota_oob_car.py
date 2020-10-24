@@ -9,7 +9,7 @@ from .registry import DATASETS
 
 
 @DATASETS.register_module
-class CocoDotaOBBDataset(CustomDataset):
+class CocoDotaOBBCARDataset(CustomDataset):
     CLASSES = ('small ship',  'large ship', 'small car', 'bus', 'truck', 'train')
 
     def load_annotations(self, ann_file):
