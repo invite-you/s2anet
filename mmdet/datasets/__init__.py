@@ -15,8 +15,7 @@ from .hrsc2016 import HRSC2016Dataset
 from .coco_dota_oob import CocoDotaOBBDataset
 from .coco_dota_oob_car import CocoDotaOBBCARDataset
 from .coco_dota_oob_etc import CocoDotaOBBETCDataset
-from .coco_dota_oob_etc import CocoDotaOBBOnlyCARDataset
-
+from .coco_dota_oob_olny_car import CocoDotaOBBOnlyCARDataset
 
 __all__ = [
     'CustomDataset', 'XMLDataset', 'CocoDataset', 'VOCDataset',
