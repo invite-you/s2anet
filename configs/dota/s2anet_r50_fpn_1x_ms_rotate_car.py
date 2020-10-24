@@ -79,7 +79,7 @@ test_cfg = dict(
     score_thr=0.05,
     nms=dict(type='nms_rotated', iou_thr=0.1),
     max_per_img=3000)
-dataset_type = 'CocoDotaOBBDataset'
+dataset_type = 'CocoDotaOBBCARDataset'
 data_root = '/content/gdrive/My Drive/Arirang/data/train/custom_coco_all/'
 imgae_root = '/content/gdrive/My Drive/Arirang/data/train/coco_all/'
 img_norm_cfg = dict(
