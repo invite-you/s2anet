@@ -173,8 +173,8 @@ total_epochs = 6000
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = '/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_car_adam/'
-load_from = '/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_adam/epoch_304.pth'#'/content/gdrive/My Drive/Arirang/s2anet_r50_fpn_1x_ms_rotate_epoch_12_20200815.pth'
-resume_from = None#'/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate/epoch_256.pth'
+load_from = None#'/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_adam/epoch_304.pth'#'/content/gdrive/My Drive/Arirang/s2anet_r50_fpn_1x_ms_rotate_epoch_12_20200815.pth'
+resume_from ='/content/gdrive/My Drive/Arirang/models/s2anet_r50_fpn_1x_ms_rotate_car_adam/latest.pth'
 
 workflow = [('train', 1)]
 # r50
