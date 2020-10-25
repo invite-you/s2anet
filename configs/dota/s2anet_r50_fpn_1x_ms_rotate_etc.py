@@ -80,7 +80,7 @@ test_cfg = dict(
     nms=dict(type='nms_rotated', iou_thr=0.1),
     max_per_img=3000)
 dataset_type = 'CocoDotaOBBETCDataset'
-data_root = '/content/gdrive/My Drive/Arirang/data/train/custom_coco_all_sp/'
+data_root = '/content/gdrive/My Drive/Arirang/data/train/custom_coco_all_etc/'
 imgae_root = '/content/gdrive/My Drive/Arirang/data/train/coco_all/'
 img_norm_cfg = dict(
     mean=[54.06, 53.295, 50.235], std=[36.72, 35.955, 33.915], to_rgb=True)
